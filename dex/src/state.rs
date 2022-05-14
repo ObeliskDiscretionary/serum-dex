@@ -1137,7 +1137,7 @@ pub type EventQueue<'a> = Queue<'a, EventQueueHeader>;
 
 #[derive(Copy, Clone, BitFlags, Debug)]
 #[repr(u8)]
-enum EventFlag {
+pub enum EventFlag {
     Fill = 0x1,
     Out = 0x2,
     Bid = 0x4,
@@ -1167,20 +1167,20 @@ impl EventFlag {
 #[derive(Copy, Clone, Debug)]
 #[repr(packed)]
 pub struct Event {
-    event_flags: u8,
-    owner_slot: u8,
+    pub event_flags: u8,
+    pub owner_slot: u8,
 
-    fee_tier: u8,
+    pub fee_tier: u8,
 
-    _padding: [u8; 5],
+    pub _padding: [u8; 5],
 
-    native_qty_released: u64,
-    native_qty_paid: u64,
-    native_fee_or_rebate: u64,
+    pub native_qty_released: u64,
+    pub native_qty_paid: u64,
+    pub native_fee_or_rebate: u64,
 
-    order_id: u128,
+    pub order_id: u128,
     pub owner: [u64; 4],
-    client_order_id: u64,
+    pub client_order_id: u64,
 }
 unsafe impl Zeroable for Event {}
 unsafe impl Pod for Event {}
