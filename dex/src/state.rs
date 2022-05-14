@@ -1155,7 +1155,7 @@ impl EventFlag {
     }
 
     #[inline]
-    fn flags_to_side(flags: BitFlags<Self>) -> Side {
+    pub fn flags_to_side(flags: BitFlags<Self>) -> Side {
         if flags.contains(EventFlag::Bid) {
             Side::Bid
         } else {
