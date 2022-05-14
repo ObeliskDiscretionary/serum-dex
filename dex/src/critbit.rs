@@ -303,6 +303,18 @@ impl Slab {
         slab
     }
 
+    /// Like new but for const refs
+    #[inline]
+    pub fn new_ref(bytes: &[u8]) -> &Self {
+        let len_without_header = bytes.len().checked_sub(SLAB_HEADER_LEN).unwrap();
+        let slop = len_without_header % size_of::<AnyNode>();
+        let truncated_len = bytes.len() - slop;
+        let bytes = &bytes[..truncated_len];
+        let slab: &Self = unsafe { & *(bytes as *const [u8] as *const Slab) };
+        slab.check_size_align(); // check alignment
+        slab
+    }
+
     #[inline]
     pub fn assert_minimum_capacity(&self, capacity: u32) -> DexResult {
         if self.nodes().len() <= (capacity as usize) * 2 {
@@ -726,8 +738,7 @@ impl Slab {
         self.remove_by_key(self.get(self.find_max()?)?.key()?)
     }
 
-    #[cfg(test)]
-    fn traverse(&self) -> Vec<&LeafNode> {
+    pub fn traverse(&self) -> Vec<&LeafNode> {
         fn walk_rec<'a>(slab: &'a Slab, sub_root: NodeHandle, buf: &mut Vec<&'a LeafNode>) {
             match slab.get(sub_root).unwrap().case().unwrap() {
                 NodeRef::Leaf(leaf) => {
@@ -751,7 +762,6 @@ impl Slab {
         buf
     }
 
-    #[cfg(test)]
     fn hexdump(&self) {
         println!("Header:");
         hexdump::hexdump(bytemuck::bytes_of(self.header()));
