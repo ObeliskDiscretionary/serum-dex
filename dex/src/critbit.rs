@@ -186,7 +186,6 @@ impl AnyNode {
         }
     }
 
-    #[cfg(test)]
     fn prefix_len(&self) -> u32 {
         match self.case().unwrap() {
             NodeRef::Inner(&InnerNode { prefix_len, .. }) => prefix_len,
