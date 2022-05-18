@@ -611,7 +611,7 @@ impl Slab {
     }
 
 
-    fn find_by_key(&self, search_key: u128) -> Option<NodeHandle> {
+    pub fn find_by_key(&self, search_key: u128) -> Option<NodeHandle> {
         let mut node_handle: NodeHandle = self.root()?;
         loop {
             let node_ref = self.get(node_handle).unwrap();
